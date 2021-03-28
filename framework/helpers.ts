@@ -1,19 +1,6 @@
 import sinon from "sinon";
 import { CleanupFn } from "./index.js";
 import { memoize } from "lodash-es";
-import { DOMWindow, JSDOM } from "jsdom";
-
-import FDBFactory from "fake-indexeddb/lib/FDBFactory.js";
-import FDBCursor from "fake-indexeddb/lib/FDBCursor.js";
-import FDBCursorWithValue from "fake-indexeddb/lib/FDBCursorWithValue.js";
-import FDBDatabase from "fake-indexeddb/lib/FDBDatabase.js";
-import FDBIndex from "fake-indexeddb/lib/FDBIndex.js";
-import FDBKeyRange from "fake-indexeddb/lib/FDBKeyRange.js";
-import FDBObjectStore from "fake-indexeddb/lib/FDBObjectStore.js";
-import FDBOpenDBRequest from "fake-indexeddb/lib/FDBOpenDBRequest.js";
-import FDBRequest from "fake-indexeddb/lib/FDBRequest.js";
-import FDBTransaction from "fake-indexeddb/lib/FDBTransaction.js";
-import FDBVersionChangeEvent from "fake-indexeddb/lib/FDBVersionChangeEvent.js";
 
 export function getGlobal<T>(): typeof globalThis & T {
   /* eslint @typescript-eslint/ban-ts-comment: "off" */
@@ -43,20 +30,17 @@ function withLazyProp<O, N extends keyof O>(
   return obj;
 }
 
-const makeJSDOM = memoize(() => new JSDOM(""));
-const makeIDB = memoize(() => new FDBFactory());
+const makeMakeJSDOM = memoize(async () => {
+  const { JSDOM } = await import("jsdom");
+  return memoize(() => new JSDOM());
+});
 
-export function ensureBrowserDOM(globalVar = getGlobal()): void {
-  withLazyProp(globalVar, "indexedDB", (g) => {
-    const indexedDB = makeIDB();
-    installFakeIDBConstructors(g);
-    return indexedDB;
-  });
+export async function ensureBrowserDOM(globalVar = getGlobal()): Promise<void> {
+  const makeJSDOM = await makeMakeJSDOM();
   withLazyProp(globalVar, "window", (g) => {
     const { window } = makeJSDOM();
     withLazyProp(window, "indexedDB", () => {
       const indexedDB = g.indexedDB;
-      installFakeIDBConstructors(window);
       return indexedDB;
     });
     // I know
@@ -66,18 +50,14 @@ export function ensureBrowserDOM(globalVar = getGlobal()): void {
   withLazyProp(globalVar, "document", (g) => g.window.document);
 }
 
-function installFakeIDBConstructors(global: DOMWindow | typeof globalThis) {
-  global["IDBCursor"] = FDBCursor;
-  global["IDBCursorWithValue"] = FDBCursorWithValue;
-  global["IDBDatabase"] = FDBDatabase;
-  global["IDBFactory"] = FDBFactory;
-  global["IDBIndex"] = FDBIndex;
-  global["IDBKeyRange"] = FDBKeyRange;
-  global["IDBObjectStore"] = FDBObjectStore;
-  global["IDBOpenDBRequest"] = FDBOpenDBRequest;
-  global["IDBRequest"] = FDBRequest;
-  global["IDBTransaction"] = FDBTransaction;
-  global["IDBVersionChangeEvent"] = FDBVersionChangeEvent;
+const makeMakeIDB = memoize(async () => {
+  const FDBFactory = await import("fake-indexeddb/lib/FDBFactory.js");
+  return memoize(() => new FDBFactory.default());
+});
+
+export async function ensureIndexedDB(globalVar = getGlobal()): Promise<void> {
+  const makeIDB = await makeMakeIDB();
+  withLazyProp(globalVar, "indexedDB", makeIDB);
 }
 
 export function fakeTimers(cleanup: CleanupFn): sinon.SinonFakeTimers {
