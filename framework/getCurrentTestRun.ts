@@ -1,9 +1,9 @@
 import { parentPort } from "worker_threads";
-import { Report } from "./types";
-import { RUN_KEY, REPORT_KEY, TestRun } from "./index";
-import { getGlobal } from "./helpers";
+import { Report } from "./types.js";
+import { RUN_KEY, REPORT_KEY, TestRun } from "./index.js";
+import { getGlobal } from "./helpers.js";
 
-export function getCurrentTestRun() {
+export function getCurrentTestRun(): TestRun {
   const globalVar = getGlobal<{ [REPORT_KEY]?: Report; [RUN_KEY]?: TestRun }>();
   const init = !globalVar[RUN_KEY];
 
@@ -18,7 +18,7 @@ export function getCurrentTestRun() {
       parentPort?.postMessage({ type: "skipped", path });
     },
     failed(path: string[], er: Error) {
-      let error = {
+      const error = {
         message: [er.name, er.message].filter((w) => w).join(": "),
         stack: er.stack,
       };

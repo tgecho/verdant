@@ -35,10 +35,10 @@ let portrange = 1738 + 2;
 function getPort() {
   // https://gist.github.com/mikeal/1840641
   return new Promise(function get(resolve: (port: number) => void) {
-    let port = portrange;
+    const port = portrange;
     portrange += 1;
 
-    let server = net.createServer();
+    const server = net.createServer();
     server.listen(port, () => {
       server.once("close", () => resolve(port));
       server.close();
@@ -65,7 +65,7 @@ export function anybar(options?: {
   managed?: boolean;
   host?: string;
   port?: number;
-}) {
+}): { set: (status: Status) => void; close: () => void } {
   const managed = options?.managed ?? true;
   const host = options?.host ?? "localhost";
   const port = options?.port ?? managed ? getPort() : Promise.resolve(1738);

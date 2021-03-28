@@ -1,35 +1,25 @@
 import sinon from "sinon";
 import { CleanupFn } from "./index.js";
-
+import { memoize } from "lodash-es";
 import { DOMWindow, JSDOM } from "jsdom";
 
-//@ts-ignore
-import FDBFactory from "fake-indexeddb/build/FDBFactory";
-//@ts-ignore
-import FDBCursor from "fake-indexeddb/build/FDBCursor";
-//@ts-ignore
-import FDBCursorWithValue from "fake-indexeddb/build/FDBCursorWithValue";
-//@ts-ignore
-import FDBDatabase from "fake-indexeddb/build/FDBDatabase";
-//@ts-ignore
-import FDBIndex from "fake-indexeddb/build/FDBIndex";
-//@ts-ignore
-import FDBKeyRange from "fake-indexeddb/build/FDBKeyRange";
-//@ts-ignore
-import FDBObjectStore from "fake-indexeddb/build/FDBObjectStore";
-//@ts-ignore
-import FDBOpenDBRequest from "fake-indexeddb/build/FDBOpenDBRequest";
-//@ts-ignore
-import FDBRequest from "fake-indexeddb/build/FDBRequest";
-//@ts-ignore
-import FDBTransaction from "fake-indexeddb/build/FDBTransaction";
-//@ts-ignore
-import FDBVersionChangeEvent from "fake-indexeddb/build/FDBVersionChangeEvent";
+import FDBFactory from "fake-indexeddb/lib/FDBFactory.js";
+import FDBCursor from "fake-indexeddb/lib/FDBCursor.js";
+import FDBCursorWithValue from "fake-indexeddb/lib/FDBCursorWithValue.js";
+import FDBDatabase from "fake-indexeddb/lib/FDBDatabase.js";
+import FDBIndex from "fake-indexeddb/lib/FDBIndex.js";
+import FDBKeyRange from "fake-indexeddb/lib/FDBKeyRange.js";
+import FDBObjectStore from "fake-indexeddb/lib/FDBObjectStore.js";
+import FDBOpenDBRequest from "fake-indexeddb/lib/FDBOpenDBRequest.js";
+import FDBRequest from "fake-indexeddb/lib/FDBRequest.js";
+import FDBTransaction from "fake-indexeddb/lib/FDBTransaction.js";
+import FDBVersionChangeEvent from "fake-indexeddb/lib/FDBVersionChangeEvent.js";
 
-export function getGlobal<T = {}>(): typeof globalThis & T {
+export function getGlobal<T>(): typeof globalThis & T {
+  /* eslint @typescript-eslint/ban-ts-comment: "off" */
   return typeof window !== "undefined"
     ? window
-    : //@ts-ignore
+    : // @ts-ignore
     typeof WorkerGlobalScope !== "undefined"
     ? self
     : typeof global !== "undefined"
@@ -37,11 +27,11 @@ export function getGlobal<T = {}>(): typeof globalThis & T {
     : Function("return this;")();
 }
 
-export function withLazyProp<O, N extends keyof O>(
+function withLazyProp<O, N extends keyof O>(
   obj: O,
   name: N,
   init: (obj: O) => O[N]
-) {
+): O & Record<N, O[N]> {
   if (!Object.getOwnPropertyDescriptor(obj, name)) {
     let value;
     Object.defineProperty(obj, name, {
@@ -53,44 +43,52 @@ export function withLazyProp<O, N extends keyof O>(
   return obj;
 }
 
-export function withBrowserDOM(globalVar = getGlobal()) {
-  return withLazyProp(globalVar as any, "window", (g) => {
-    const { window } = new JSDOM("");
-    // @ts-ignore
-    g.window = window;
-    g.document = window.document;
+const makeJSDOM = memoize(() => new JSDOM(""));
+const makeIDB = memoize(() => new FDBFactory());
 
-    return withLazyProp(window, "indexedDB", installFakeIDB);
+export function ensureBrowserDOM(globalVar = getGlobal()): void {
+  withLazyProp(globalVar, "indexedDB", (g) => {
+    const indexedDB = makeIDB();
+    installFakeIDBConstructors(g);
+    return indexedDB;
   });
+  withLazyProp(globalVar, "window", (g) => {
+    const { window } = makeJSDOM();
+    withLazyProp(window, "indexedDB", () => {
+      const indexedDB = g.indexedDB;
+      installFakeIDBConstructors(window);
+      return indexedDB;
+    });
+    // I know
+    // eslint-disable-next-line
+    return window as any;
+  });
+  withLazyProp(globalVar, "document", (g) => g.window.document);
 }
 
-function installFakeIDB(window: DOMWindow) {
-  const indexedDB = new FDBFactory();
-  // @ts-ignore .indexedDB is normally readonly
-  window.indexedDB = indexedDB;
-  window["IDBCursor"] = FDBCursor;
-  window["IDBCursorWithValue"] = FDBCursorWithValue;
-  window["IDBDatabase"] = FDBDatabase;
-  window["IDBFactory"] = FDBFactory;
-  window["IDBIndex"] = FDBIndex;
-  window["IDBKeyRange"] = FDBKeyRange;
-  window["IDBObjectStore"] = FDBObjectStore;
-  window["IDBOpenDBRequest"] = FDBOpenDBRequest;
-  window["IDBRequest"] = FDBRequest;
-  window["IDBTransaction"] = FDBTransaction;
-  window["IDBVersionChangeEvent"] = FDBVersionChangeEvent;
-  return indexedDB;
+function installFakeIDBConstructors(global: DOMWindow | typeof globalThis) {
+  global["IDBCursor"] = FDBCursor;
+  global["IDBCursorWithValue"] = FDBCursorWithValue;
+  global["IDBDatabase"] = FDBDatabase;
+  global["IDBFactory"] = FDBFactory;
+  global["IDBIndex"] = FDBIndex;
+  global["IDBKeyRange"] = FDBKeyRange;
+  global["IDBObjectStore"] = FDBObjectStore;
+  global["IDBOpenDBRequest"] = FDBOpenDBRequest;
+  global["IDBRequest"] = FDBRequest;
+  global["IDBTransaction"] = FDBTransaction;
+  global["IDBVersionChangeEvent"] = FDBVersionChangeEvent;
 }
 
-export function fakeTimers(cleanup: CleanupFn) {
+export function fakeTimers(cleanup: CleanupFn): sinon.SinonFakeTimers {
   const clock = sinon.useFakeTimers();
   cleanup(clock.restore);
   return clock;
 }
 
-export async function rejection<T>(promise: Promise<T>) {
+export async function rejection(promise: Promise<unknown>): Promise<unknown> {
   try {
-    console.warn(`Promise resolved with`, await promise);
+    throw new Error(`Promise resolved with ${await promise}`);
   } catch (error) {
     return error;
   }

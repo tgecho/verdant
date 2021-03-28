@@ -3,7 +3,7 @@ import { build, BuildIncremental, Plugin } from "esbuild";
 export const makeAllPackagesExternalPlugin: Plugin = {
   name: "make-all-packages-external",
   setup(build) {
-    const filter = /^[^.\/]|^\.[^.\/]|^\.\.[^\/]/;
+    const filter = /^[^./]|^\.[^./]|^\.\.[^/]/;
     build.onResolve({ filter }, (args) => ({
       path: args.path,
       external: true,
@@ -38,7 +38,7 @@ export function testBuilder(testPath: string): TestBuilder {
           metafile: true,
           outdir: "./build/tests",
           sourcemap: true,
-          outExtension: { ".js": ".cjs" },
+          format: "esm",
           plugins: [makeAllPackagesExternalPlugin],
         });
         save(initial);

@@ -3,12 +3,21 @@
   "version": "0.1.0",
   "description": "A fast, opinionated test runner for Typescript/Javascript and co.",
   "type": "module",
-  "main": "dist/framework/index.js",
+  "main": "./dist/framework/index.js",
+  "browser": "./dist/framework/index.js",
+  "module": "./dist/framework/index.js",
+  "types": "./dist/framework/index.d.ts",
+  "exports": {
+    ".": "./dist/framework/index.js",
+    "./helpers": "./dist/framework/helpers.js",
+    "./runner": "./dist/runner.js"
+  },
   "bin": {
     "verdant": "./dist/runner/main.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "prettier --loglevel warn --check . && eslint .",
     "build": "tsc",
     "clean": "rm -rf dist"
   },
@@ -28,6 +37,7 @@
     "chokidar": "^3.5.1",
     "esbuild": "^0.10.2",
     "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
     "jsdom": "^16.5.1",
     "lodash-es": "^4.17.21",
     "minimatch": "^3.0.4",
@@ -36,6 +46,7 @@
   },
   "dependencies": {
     "@types/sinon": "^9.0.11",
+    "fake-indexeddb": "^3.1.2",
     "sinon": "^10.0.0"
   }
 }

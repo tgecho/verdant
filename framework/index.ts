@@ -1,7 +1,11 @@
-import { getCurrentTestRun } from "./getCurrentTestRun";
-import { createHookFn } from "./hook";
-import { CleanupFn, HookFn, Report } from "./types";
+import { getCurrentTestRun } from "./getCurrentTestRun.js";
+import { createHookFn } from "./hook.js";
+import { CleanupFn, HookFn, Report } from "./types.js";
 export { CleanupFn, HookFn, Report };
+
+// This is until Typescript adds support for node's exports field
+// https://github.com/microsoft/TypeScript/issues/33079
+export * from "./helpers.js";
 
 export const RUN_KEY = "__FOO_TEST_RUN";
 export const REPORT_KEY = "__FOO_TEST_REPORT";
@@ -13,20 +17,23 @@ export type TestRun = {
   report: Report;
 };
 
-export function group(name: string, fn: () => void) {
+export function group(name: string, fn: () => void): void {
   const tests = getCurrentTestRun();
   tests.path.push(name);
   fn();
   tests.path.pop();
 }
 
-test.skip = (name: string, _fn: any) => {
+test.skip = (name: string, _fn: unknown) => {
   const tests = getCurrentTestRun();
   const path = [...tests.path, name];
   tests.report.skipped(path);
 };
 
-export function test(name: string, fn: (hook: HookFn) => void | Promise<void>) {
+export function test(
+  name: string,
+  fn: (hook: HookFn) => void | Promise<void>
+): void {
   const tests = getCurrentTestRun();
 
   const path = [...tests.path, name];

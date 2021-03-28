@@ -1,6 +1,8 @@
 import minimatch from "minimatch";
 
-export function makeMultiMatcher(patterns: string[]) {
+export function makeMultiMatcher(
+  patterns: string[]
+): (string: string) => boolean {
   const testMatchers = patterns.map(
     (p) => new minimatch.Minimatch(p, { matchBase: true })
   );

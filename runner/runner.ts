@@ -6,12 +6,16 @@ import { runTest } from "./runTest.js";
 import { watch } from "./watch.js";
 import { makeMultiMatcher } from "./makeMultiMatcher.js";
 
-export function runner(config: Config, callback: Callbacks) {
+type Runner = {
+  stop: () => Promise<void>;
+};
+
+export function runner(config: Config, callback: Callbacks): Runner {
   const filesToTests: { [path: string]: Set<string> } = {};
   const tests: { [path: string]: TestBuilder } = {};
 
   let queuedTests = new Set<string>();
-  let runningTests = new Map<string, Promise<TestResult | void>>();
+  const runningTests = new Map<string, Promise<TestResult | void>>();
 
   const isTest = makeMultiMatcher(config.tests);
 
