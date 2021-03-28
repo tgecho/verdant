@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import { CleanupFn } from "./index.js";
-import { memoize } from "lodash-es";
+import memoize from "lodash/memoize";
 
 export function getGlobal<T>(): typeof globalThis & T {
   /* eslint @typescript-eslint/ban-ts-comment: "off" */
@@ -51,7 +51,7 @@ export async function ensureBrowserDOM(globalVar = getGlobal()): Promise<void> {
 }
 
 const makeMakeIDB = memoize(async () => {
-  const FDBFactory = await import("fake-indexeddb/lib/FDBFactory.js");
+  const FDBFactory = await import("fake-indexeddb/lib/FDBFactory");
   return memoize(() => new FDBFactory.default());
 });
 

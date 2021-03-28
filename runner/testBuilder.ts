@@ -45,7 +45,8 @@ export function testBuilder(testPath: string, config: Config): TestBuilder {
           metafile: true,
           outdir: config.tmpDir,
           sourcemap: true,
-          format: "esm",
+          platform: "node",
+          outExtension: { ".js": ".cjs" },
           plugins: [makeAllPackagesExternalPlugin],
           banner: {
             js: `__VERDANT_TEST_REPORTER = require("${parentPortReporter}").parentPortReporter;`,

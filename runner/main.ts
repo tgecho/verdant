@@ -1,7 +1,7 @@
-import { raw } from "./reporters/raw.js";
-import { dots } from "./reporters/dots.js";
-import { runner } from "./runner.js";
-import { bundleAllTests } from "./bundleAllTests.js";
+import { raw } from "./reporters/raw";
+import { dots } from "./reporters/dots";
+import { runner } from "./runner";
+import { bundleAllTests } from "./bundleAllTests";
 
 const args = process.argv;
 const watch = args.includes("--watch") || args.includes("-w");

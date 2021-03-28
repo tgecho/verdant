@@ -2,7 +2,6 @@
   "name": "verdant",
   "version": "0.1.0",
   "description": "A fast, opinionated test runner for Typescript/Javascript and co.",
-  "type": "module",
   "main": "./dist/framework/index.js",
   "browser": "./dist/framework/index.js",
   "module": "./dist/framework/index.js",
@@ -30,7 +29,6 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jsdom": "^16.2.9",
-    "@types/lodash-es": "^4.17.4",
     "@types/minimatch": "^3.0.4",
     "@types/node": "^14.14.37",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
@@ -41,14 +39,15 @@
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "jsdom": "^16.5.1",
-    "lodash-es": "^4.17.21",
     "minimatch": "^3.0.4",
     "prettier": "^2.2.1",
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.168",
     "@types/sinon": "^9.0.11",
     "fake-indexeddb": "^3.1.2",
+    "lodash": "^4.17.21",
     "sinon": "^10.0.0"
   }
 }

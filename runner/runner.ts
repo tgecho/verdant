@@ -1,10 +1,10 @@
-import { debounce } from "lodash-es";
+import debounce from "lodash/debounce";
 import path from "path";
-import { TestBuilder, testBuilder } from "./testBuilder.js";
-import { Callbacks, Config, TestResult } from "./types.js";
-import { runTest } from "./runTest.js";
-import { watch } from "./watch.js";
-import { makeMultiMatcher } from "./makeMultiMatcher.js";
+import { TestBuilder, testBuilder } from "./testBuilder";
+import { Callbacks, Config, TestResult } from "./types";
+import { runTest } from "./runTest";
+import { watch } from "./watch";
+import { makeMultiMatcher } from "./makeMultiMatcher";
 
 type Runner = {
   stop: () => Promise<void>;

@@ -1,10 +1,11 @@
 dependencies:
+  '@types/lodash': 4.14.168
   '@types/sinon': 9.0.11
   fake-indexeddb: 3.1.2
+  lodash: 4.17.21
   sinon: 10.0.0
 devDependencies:
   '@types/jsdom': 16.2.9
-  '@types/lodash-es': 4.17.4
   '@types/minimatch': 3.0.4
   '@types/node': 14.14.37
   '@typescript-eslint/eslint-plugin': 4.19.0_821acdc8bc493ad1aa2628c9b724d688
@@ -15,7 +16,6 @@ devDependencies:
   eslint: 7.23.0
   eslint-config-prettier: 8.1.0_eslint@7.23.0
   jsdom: 16.5.1
-  lodash-es: 4.17.21
   minimatch: 3.0.4
   prettier: 2.2.1
   typescript: 4.2.3
@@ -115,14 +115,8 @@ packages:
     dev: true
     resolution:
       integrity: sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
-  /@types/lodash-es/4.17.4:
-    dependencies:
-      '@types/lodash': 4.14.168
-    dev: true
-    resolution:
-      integrity: sha512-BBz79DCJbD2CVYZH67MBeHZRX++HF+5p8Mo5MzjZi64Wac39S3diedJYHZtScbRVf4DjZyN6LzA0SB0zy+HSSQ==
   /@types/lodash/4.14.168:
-    dev: true
+    dev: false
     resolution:
       integrity: sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
   /@types/minimatch/3.0.4:
@@ -1223,10 +1217,6 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==
-  /lodash-es/4.17.21:
-    dev: true
-    resolution:
-      integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
   /lodash.get/4.4.2:
     dev: false
     resolution:
@@ -1952,7 +1942,7 @@ packages:
       integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 specifiers:
   '@types/jsdom': ^16.2.9
-  '@types/lodash-es': ^4.17.4
+  '@types/lodash': ^4.14.168
   '@types/minimatch': ^3.0.4
   '@types/node': ^14.14.37
   '@types/sinon': ^9.0.11
@@ -1965,7 +1955,7 @@ specifiers:
   eslint-config-prettier: ^8.1.0
   fake-indexeddb: ^3.1.2
   jsdom: ^16.5.1
-  lodash-es: ^4.17.21
+  lodash: ^4.17.21
   minimatch: ^3.0.4
   prettier: ^2.2.1
   sinon: ^10.0.0

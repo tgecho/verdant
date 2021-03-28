@@ -1,6 +1,6 @@
 import chalk from "chalk";
-import { anybar } from "./anybar.js";
-import { Callbacks } from "../types.js";
+import { anybar } from "./anybar";
+import { Callbacks } from "../types";
 
 const write = process.stdout.write.bind(process.stdout);
 // const write = console.log;

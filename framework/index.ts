@@ -1,11 +1,11 @@
-import { getCurrentTestRun } from "./getCurrentTestRun.js";
-import { createHookFn } from "./hook.js";
-import { CleanupFn, HookFn, Report } from "./types.js";
+import { getCurrentTestRun } from "./getCurrentTestRun";
+import { createHookFn } from "./hook";
+import { CleanupFn, HookFn, Report } from "./types";
 export { CleanupFn, HookFn, Report };
 
 // This is until Typescript adds support for node's exports field
 // https://github.com/microsoft/TypeScript/issues/33079
-export * from "./helpers.js";
+export * from "./helpers";
 
 export type TestRun = {
   failed: number;

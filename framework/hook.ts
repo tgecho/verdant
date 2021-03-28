@@ -1,4 +1,4 @@
-import { CleanupFn, HookFn } from "./types.js";
+import { CleanupFn, HookFn } from "./types";
 
 export function createHookFn(): { hook: HookFn; cleanupHooks: () => void } {
   const cleanupFns: (() => void)[] = [];

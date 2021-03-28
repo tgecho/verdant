@@ -1,5 +1,5 @@
 import chokidar, { FSWatcher } from "chokidar";
-import { Config } from "./types.js";
+import { Config } from "./types";
 
 export function watch(
   config: Config,

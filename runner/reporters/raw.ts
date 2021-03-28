@@ -1,4 +1,4 @@
-import { Callbacks } from "../types.js";
+import { Callbacks } from "../types";
 
 export function raw(): Callbacks {
   return {

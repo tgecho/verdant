@@ -1,5 +1,5 @@
 import { Worker } from "worker_threads";
-import { TestMsg, Log, TestResult } from "./types.js";
+import { TestMsg, Log, TestResult } from "./types";
 
 export async function runTest(
   testPath: string,

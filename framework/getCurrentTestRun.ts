@@ -1,7 +1,7 @@
-import { Report } from "./types.js";
-import { TestRun } from "./index.js";
-import { getGlobal } from "./helpers.js";
-import { consoleReporter } from "./consoleReporter.js";
+import { Report } from "./types";
+import { TestRun } from "./index";
+import { getGlobal } from "./helpers";
+import { consoleReporter } from "./consoleReporter";
 
 export const RUN_KEY = "__VERDANT_TEST_RUN";
 

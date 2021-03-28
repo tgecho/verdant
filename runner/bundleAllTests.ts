@@ -2,9 +2,9 @@ import fs from "fs/promises";
 import path from "path";
 
 import { build, BuildResult } from "esbuild";
-import { makeAllPackagesExternalPlugin } from "./testBuilder.js";
-import { Config } from "./types.js";
-import { watch } from "./watch.js";
+import { makeAllPackagesExternalPlugin } from "./testBuilder";
+import { Config } from "./types";
+import { watch } from "./watch";
 
 const bailFastReporter = "verdant/bailFastReporter";
 
