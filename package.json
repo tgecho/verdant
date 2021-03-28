@@ -1,0 +1,31 @@
+{
+  "name": "verdant",
+  "version": "0.1.0",
+  "description": "A fast, opinionated test runner for Typescript/Javascript and co.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "bin": {
+    "verdant": "./dist/main.js"
+  },
+  "keywords": [
+    "testing"
+  ],
+  "author": "Erik Simmler",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.4",
+    "@types/minimatch": "^3.0.4",
+    "@types/node": "^14.14.37",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.5.1",
+    "esbuild": "^0.10.2",
+    "lodash-es": "^4.17.21",
+    "minimatch": "^3.0.4",
+    "typescript": "^4.2.3"
+  }
+}
