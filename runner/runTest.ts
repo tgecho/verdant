@@ -1,14 +1,14 @@
 import { Worker } from "worker_threads";
 import { TestMsg, Log, TestResult } from "./types.js";
 
-export function runTest(
-  path: string,
+export async function runTest(
+  testPath: string,
   onMessage: (msg: TestMsg) => void
 ): Promise<TestResult> {
   return new Promise((resolve) => {
-    const worker = new Worker(path, {
+    const worker = new Worker(testPath, {
       execArgv: ["--enable-source-maps"],
-      env: { NODE_V8_COVERAGE: "./build/cov" },
+      // env: { NODE_V8_COVERAGE: "./build/cov" },
       stdout: true,
       stderr: true,
     });
@@ -19,7 +19,7 @@ export function runTest(
 
     const timeLimit = 10 * 1000;
     const timeout = setTimeout(() => {
-      console.error(`Worker timed out after ${timeLimit}ms: ${path}`);
+      console.error(`Worker timed out after ${timeLimit}ms: ${testPath}`);
       worker.terminate();
     }, timeLimit);
     worker.on("message", onMessage);

@@ -7,9 +7,6 @@ export { CleanupFn, HookFn, Report };
 // https://github.com/microsoft/TypeScript/issues/33079
 export * from "./helpers.js";
 
-export const RUN_KEY = "__FOO_TEST_RUN";
-export const REPORT_KEY = "__FOO_TEST_REPORT";
-
 export type TestRun = {
   failed: number;
   path: string[];

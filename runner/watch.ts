@@ -7,7 +7,7 @@ export function watch(
   onDelete: (path: string) => void
 ): Promise<FSWatcher> {
   const watcher = chokidar.watch(config.paths, {
-    persistent: true,
+    persistent: config.watch,
     ignored: config.ignored,
   });
   watcher.on("add", onCreateOrUpdate);

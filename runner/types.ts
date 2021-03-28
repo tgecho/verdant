@@ -4,6 +4,7 @@ export type Config = {
   tests: string[];
   ignored: string[];
   watch: boolean;
+  tmpDir: string;
 };
 
 export type Callbacks = {

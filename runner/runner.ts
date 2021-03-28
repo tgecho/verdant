@@ -26,7 +26,7 @@ export function runner(config: Config, callback: Callbacks): Runner {
       callback.queued?.(Array.from(queuedTests));
 
       for (const testPath of queuedTests) {
-        const test = (tests[testPath] ??= testBuilder(testPath));
+        const test = (tests[testPath] ??= testBuilder(testPath, config));
         const run: Promise<TestResult | void> = test
           .build()
           .then((build) => {
@@ -75,7 +75,6 @@ export function runner(config: Config, callback: Callbacks): Runner {
       });
       if (!config.watch) {
         allPassed.then(async (passed) => {
-          await (await watcher).close();
           process.exit(passed ? 0 : 1);
         });
       }

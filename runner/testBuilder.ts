@@ -1,21 +1,28 @@
 import { build, BuildIncremental, Plugin } from "esbuild";
+import { Config } from "./types";
+
+const parentPortReporter = "verdant/parentPortReporter";
 
 export const makeAllPackagesExternalPlugin: Plugin = {
   name: "make-all-packages-external",
   setup(build) {
     const filter = /^[^./]|^\.[^./]|^\.\.[^/]/;
-    build.onResolve({ filter }, (args) => ({
-      path: args.path,
-      external: true,
-    }));
+    build.onResolve({ filter }, (args) => {
+      return {
+        path: args.path,
+        external: true,
+      };
+    });
   },
 };
+
 export type TestBuilder = {
   bundle?: string;
   inputs: string[];
   build: () => Promise<TestBuilder>;
 };
-export function testBuilder(testPath: string): TestBuilder {
+
+export function testBuilder(testPath: string, config: Config): TestBuilder {
   let initial: BuildIncremental | undefined;
 
   function save(build: BuildIncremental) {
@@ -36,10 +43,13 @@ export function testBuilder(testPath: string): TestBuilder {
           incremental: true,
           bundle: true,
           metafile: true,
-          outdir: "./build/tests",
+          outdir: config.tmpDir,
           sourcemap: true,
           format: "esm",
           plugins: [makeAllPackagesExternalPlugin],
+          banner: {
+            js: `__VERDANT_TEST_REPORTER = require("${parentPortReporter}").parentPortReporter;`,
+          },
         });
         save(initial);
       }

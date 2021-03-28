@@ -16,10 +16,10 @@ export function dots(options?: { clear: boolean; anybar: boolean }): Callbacks {
       stats = { total: 0, passed: 0, skipped: 0, failed: 0 };
       if (clear) console.clear();
       write(chalk.dim(`\nRUNNING ${files.join(", ")}\n\n`));
+      dot?.set("hollow");
     },
     started() {
       stats.total += 1;
-      dot?.set("hollow");
     },
     passed() {
       stats.passed += 1;
@@ -38,7 +38,7 @@ export function dots(options?: { clear: boolean; anybar: boolean }): Callbacks {
     },
     logs(file, logs) {
       if (logs.length > 0) {
-        write(chalk.dim(`\n\nLOGS ${file}\n`));
+        write(chalk.dim(`\n\nLOGS ${file}\n\n`));
         for (const line of logs) {
           const text = line.data.toString();
           write(line.std === "err" ? chalk.red(text) : text);
