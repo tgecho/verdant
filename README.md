@@ -2,6 +2,8 @@
 
 A fast, opinionated test runner for Typescript/Javascript and co.
 
+There are many like it, but this one is mine.
+
 Open source, but not particularly looking to make an open project. This is custom made to fit my workflow and needs.
 
 ## Interesting characteristics, priorities, and accepted limitations
