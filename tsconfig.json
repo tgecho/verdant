@@ -1,5 +1,5 @@
 {
-  "include": ["runner/*", "framework/*"],
+  "include": ["runner", "framework", "reporters"],
   "compilerOptions": {
     "incremental": true,
     "target": "esnext",

@@ -6,7 +6,7 @@ import { makeAllPackagesExternalPlugin } from "./testBuilder";
 import { Config } from "./types";
 import { watch } from "./watch";
 
-const bailFastReporter = "verdant/bailFastReporter";
+const bailReporter = "verdant/bailReporter";
 
 export async function bundleAllTests(config: Config): Promise<BuildResult> {
   const sources: string[] = [];
@@ -32,7 +32,7 @@ export async function bundleAllTests(config: Config): Promise<BuildResult> {
     platform: "node",
     plugins: [makeAllPackagesExternalPlugin],
     banner: {
-      js: `__VERDANT_TEST_REPORTER = require("${bailFastReporter}").bailFastReporter;`,
+      js: `__VERDANT_TEST_REPORTER = require("${bailReporter}").bailReporter;`,
     },
   });
 }

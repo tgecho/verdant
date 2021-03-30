@@ -9,8 +9,8 @@
   "exports": {
     ".": "./dist/framework/index.js",
     "./helpers": "./dist/framework/helpers.js",
-    "./parentPortReporter": "./dist/framework/parentPortReporter.js",
-    "./bailFastReporter": "./dist/framework/bailFastReporter.js",
+    "./parentPortReporter": "./dist/reporters/parentPort.js",
+    "./bailReporter": "./dist/reporters/bail.js",
     "./runner": "./dist/runner.js"
   },
   "bin": {

@@ -1,5 +1,5 @@
-import { raw } from "./reporters/raw";
-import { dots } from "./reporters/dots";
+import { raw } from "../reporters/raw";
+import { dots } from "../reporters/dots";
 import { runner } from "./runner";
 import { bundleAllTests } from "./bundleAllTests";
 

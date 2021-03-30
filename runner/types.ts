@@ -1,3 +1,5 @@
+import { ReportedError } from "../reporters/types";
+
 export type Config = {
   cwd: string;
   paths: string[];
@@ -7,26 +9,12 @@ export type Config = {
   tmpDir: string;
 };
 
-export type Callbacks = {
-  queued?: (files: string[]) => void;
-  started?: (file: string, path: string[]) => void;
-  passed?: (file: string, path: string[]) => void;
-  skipped?: (file: string, path: string[]) => void;
-  failed?: (
-    file: string,
-    path: string[],
-    error: { message: string; stack: string }
-  ) => void;
-  logs?: (file: string, logs: Log[]) => void;
-  done?: () => void;
-};
-
 export type TestMsg =
   | { type: "started" | "passed" | "skipped"; path: string[] }
   | {
       type: "failed";
       path: string[];
-      error: { message: string; stack: string };
+      error: ReportedError;
     };
 
 export type Log = { std: "out" | "err"; data: Buffer };

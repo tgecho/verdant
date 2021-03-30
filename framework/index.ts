@@ -1,7 +1,8 @@
+import { Reporter } from "../reporters/types";
 import { getCurrentTestRun } from "./getCurrentTestRun";
 import { createHookFn } from "./hook";
-import { CleanupFn, HookFn, Report } from "./types";
-export { CleanupFn, HookFn, Report };
+import { CleanupFn, HookFn } from "./types";
+export { CleanupFn, HookFn };
 
 // This is until Typescript adds support for node's exports field
 // https://github.com/microsoft/TypeScript/issues/33079
@@ -11,7 +12,7 @@ export type TestRun = {
   failed: number;
   path: string[];
   queue: Promise<unknown>;
-  report: Report;
+  report: Reporter;
 };
 
 export function group(name: string, fn: () => void): void {
@@ -24,7 +25,7 @@ export function group(name: string, fn: () => void): void {
 test.skip = (name: string, _fn: unknown) => {
   const tests = getCurrentTestRun();
   const path = [...tests.path, name];
-  tests.report.skipped(path);
+  tests.report.skipped?.(path);
 };
 
 export function test(
@@ -34,7 +35,7 @@ export function test(
   const tests = getCurrentTestRun();
 
   const path = [...tests.path, name];
-  tests.report.started(path);
+  tests.report.started?.(path);
 
   const { hook, cleanupHooks } = createHookFn();
 
@@ -52,9 +53,11 @@ export function test(
       return fn(hook);
     })
     .finally(cleanupHooks)
-    .then(() => tests.report.passed(path))
+    .then(() => tests.report.passed?.(path))
     .catch((error: Error) => {
-      //   console.error(error);
-      tests.report.failed(path, error);
+      tests.report.failed?.(path, {
+        message: [error.name, error.message].filter((w) => w).join(": "),
+        stack: error.stack,
+      });
     });
 }

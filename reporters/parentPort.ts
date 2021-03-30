@@ -1,6 +1,7 @@
 import { parentPort } from "worker_threads";
+import { ReportedError, Reporter } from "./types";
 
-export const parentPortReporter = {
+export const parentPortReporter: Reporter = {
   started(path: string[]): void {
     parentPort?.postMessage({ type: "started", path });
   },
@@ -10,11 +11,7 @@ export const parentPortReporter = {
   skipped(path: string[]): void {
     parentPort?.postMessage({ type: "skipped", path });
   },
-  failed(path: string[], er: Error): void {
-    const error = {
-      message: [er.name, er.message].filter((w) => w).join(": "),
-      stack: er.stack,
-    };
+  failed(path: string[], error: ReportedError): void {
     parentPort?.postMessage({ type: "failed", path, error });
   },
 };

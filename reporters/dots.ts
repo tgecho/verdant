@@ -1,11 +1,15 @@
 import chalk from "chalk";
 import { anybar } from "./anybar";
-import { Callbacks } from "../types";
+import { Reporter } from "./types";
 
 const write = process.stdout.write.bind(process.stdout);
 // const write = console.log;
 
-export function dots(options?: { clear: boolean; anybar: boolean }): Callbacks {
+function printPath(path: string[]) {
+  return path.join(" | ");
+}
+
+export function dots(options?: { clear: boolean; anybar: boolean }): Reporter {
   const clear = options?.clear ?? true;
 
   const dot = options?.anybar ? anybar() : null;
@@ -29,21 +33,22 @@ export function dots(options?: { clear: boolean; anybar: boolean }): Callbacks {
       stats.skipped += 1;
       write(chalk.yellow("s"));
     },
-    failed(file, path, error) {
+    failed(path, error) {
       stats.failed += 1;
-      write(chalk.red(`\n\nFAILED ${file} (${path.join(" | ")})\n`));
+      write(chalk.red(`\n\nFAILED ${printPath(path)})\n`));
       write(`${error.message}\n`);
       write(`${error.stack}\n`);
       dot?.set("red");
     },
-    logs(file, logs) {
+    logs(path, logs) {
       if (logs.length > 0) {
-        write(chalk.dim(`\n\nLOGS ${file}\n\n`));
+        const pathStr = printPath(path);
+        write(chalk.dim(`\n\nLOGS ${pathStr}\n\n`));
         for (const line of logs) {
           const text = line.data.toString();
           write(line.std === "err" ? chalk.red(text) : text);
         }
-        write(chalk.dim(`\nend LOGS ${file}\n`));
+        write(chalk.dim(`\nend LOGS ${pathStr}\n`));
       }
     },
     done() {

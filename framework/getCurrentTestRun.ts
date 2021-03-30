@@ -1,15 +1,15 @@
-import { Report } from "./types";
 import { TestRun } from "./index";
 import { getGlobal } from "./helpers";
-import { consoleReporter } from "./consoleReporter";
+import { consoleReporter } from "../reporters/console";
+import { Reporter } from "../reporters/types";
 
 export const RUN_KEY = "__VERDANT_TEST_RUN";
 
-declare const __VERDANT_TEST_REPORTER: Report;
+declare const __VERDANT_TEST_REPORTER: Reporter;
 
 export function getCurrentTestRun(): TestRun {
   const globalVar = getGlobal<{
-    __VERDANT_TEST_REPORTER?: Report;
+    __VERDANT_TEST_REPORTER?: Reporter;
     [RUN_KEY]?: TestRun;
   }>();
   const init = !globalVar[RUN_KEY];
@@ -17,7 +17,7 @@ export function getCurrentTestRun(): TestRun {
   if (typeof __VERDANT_TEST_REPORTER === "undefined") {
     globalVar.__VERDANT_TEST_REPORTER = consoleReporter;
   }
-  const report = __VERDANT_TEST_REPORTER as Report;
+  const report = __VERDANT_TEST_REPORTER as Reporter;
 
   const tests: TestRun = (globalVar[RUN_KEY] ??= {
     failed: 0,

@@ -1,7 +1,8 @@
 import debounce from "lodash/debounce";
 import path from "path";
 import { TestBuilder, testBuilder } from "./testBuilder";
-import { Callbacks, Config, TestResult } from "./types";
+import { Config, TestResult } from "./types";
+import { Reporter } from "../reporters/types";
 import { runTest } from "./runTest";
 import { watch } from "./watch";
 import { makeMultiMatcher } from "./makeMultiMatcher";
@@ -10,7 +11,7 @@ type Runner = {
   stop: () => Promise<void>;
 };
 
-export function runner(config: Config, callback: Callbacks): Runner {
+export function runner(config: Config, callback: Reporter): Runner {
   const filesToTests: { [path: string]: Set<string> } = {};
   const tests: { [path: string]: TestBuilder } = {};
 
@@ -38,10 +39,11 @@ export function runner(config: Config, callback: Callbacks): Runner {
             if (!queuedTests.has(testPath) && build.bundle) {
               const bundlePath = path.join(config.cwd, build.bundle);
               return runTest(bundlePath, (msg) => {
+                const path = [testPath, ...msg.path];
                 if (msg.type === "failed") {
-                  callback.failed?.(testPath, msg.path, msg.error);
+                  callback.failed?.(path, msg.error);
                 } else {
-                  callback[msg.type]?.(testPath, msg.path);
+                  callback[msg.type]?.(path);
                 }
               });
             }
@@ -52,7 +54,7 @@ export function runner(config: Config, callback: Callbacks): Runner {
         runningTests.set(testPath, run);
         run.then((result) => {
           if (result && runningTests.get(testPath) === run) {
-            callback.logs?.(testPath, result.logs); // TODO: logs?
+            callback.logs?.([testPath], result.logs); // TODO: logs?
             runningTests.delete(testPath);
           }
         });
