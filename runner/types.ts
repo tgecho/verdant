@@ -6,7 +6,10 @@ export type Config = {
   tests: string[];
   ignored: string[];
   watch: boolean;
+  coverage: true;
   tmpDir: string;
+  coverageReportDir: string;
+  bundlePath: string;
 };
 
 export type TestMsg =
@@ -22,4 +25,10 @@ export type Log = { std: "out" | "err"; data: Buffer };
 export type TestResult = {
   passed: boolean;
   logs: Log[];
+  covDir?: string;
+};
+
+export type CoverageTask = {
+  testPath: string;
+  covDir: string;
 };

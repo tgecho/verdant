@@ -23,11 +23,10 @@ export async function bundleAllTests(config: Config): Promise<BuildResult> {
   const bundleSourcePath = path.join(config.tmpDir, "bundle.ts");
   await fs.mkdir(config.tmpDir, { recursive: true });
   await fs.writeFile(bundleSourcePath, bundleSource);
-  const bundlePath = path.join(config.tmpDir, "bundle.cjs");
   return build({
     entryPoints: [bundleSourcePath],
     bundle: true,
-    outfile: bundlePath,
+    outfile: config.bundlePath,
     sourcemap: true,
     platform: "node",
     plugins: [makeAllPackagesExternalPlugin],

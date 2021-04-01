@@ -6,6 +6,7 @@ import { Reporter } from "../reporters/types";
 import { runTest } from "./runTest";
 import { watch } from "./watch";
 import { makeMultiMatcher } from "./makeMultiMatcher";
+import { createCoverageWorker } from "./coverage";
 
 type Runner = {
   stop: () => Promise<void>;
@@ -19,6 +20,8 @@ export function runner(config: Config, callback: Reporter): Runner {
   const runningTests = new Map<string, Promise<TestResult | void>>();
 
   const isTest = makeMultiMatcher(config.tests);
+
+  const coverage = createCoverageWorker("coverage");
 
   const queueRun = debounce(
     () => {
@@ -38,13 +41,18 @@ export function runner(config: Config, callback: Reporter): Runner {
             // Only run the test if it hasn't been requeued by a file change
             if (!queuedTests.has(testPath) && build.bundle) {
               const bundlePath = path.join(config.cwd, build.bundle);
-              return runTest(bundlePath, (msg) => {
+              return runTest(bundlePath, config, (msg) => {
                 const path = [testPath, ...msg.path];
                 if (msg.type === "failed") {
                   callback.failed?.(path, msg.error);
                 } else {
                   callback[msg.type]?.(path);
                 }
+              }).then((result) => {
+                if (result.covDir) {
+                  coverage.update({ testPath, covDir: result.covDir });
+                }
+                return { testPath, ...result };
               });
             }
             return;
@@ -66,15 +74,18 @@ export function runner(config: Config, callback: Reporter): Runner {
       // sense of "done". We currently mostly care for single run cases, so in
       // theory if we stop finding new test files for more than the debounce
       // time we might miss them.
-      const allPassed = Promise.all(runningTests.values()).then((results) => {
-        callback.done?.();
-        for (const result of results) {
-          if (result && result.passed === false) {
-            return false;
+      const allPassed = Promise.all(runningTests.values()).then(
+        async (results) => {
+          callback.done?.();
+
+          for (const result of results) {
+            if (result && result.passed === false) {
+              return false;
+            }
           }
+          return true;
         }
-        return true;
-      });
+      );
       if (!config.watch) {
         allPassed.then(async (passed) => {
           process.exit(passed ? 0 : 1);
@@ -101,12 +112,13 @@ export function runner(config: Config, callback: Reporter): Runner {
         }
       }
     },
-    // TODO: handle deletes
+    // TODO: handle deletes (cleanup bundles, coverage .json, etc...)
     console.log
   );
 
   return {
     stop() {
+      coverage.close();
       return watcher.then((w) => w.close());
     },
   };

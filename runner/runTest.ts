@@ -1,14 +1,23 @@
 import { Worker } from "worker_threads";
-import { TestMsg, Log, TestResult } from "./types";
+import { TestMsg, Log, TestResult, Config } from "./types";
+import { getCovDir, collectCoverage } from "./coverage";
+import fs from "fs/promises";
+import path from "path";
 
 export async function runTest(
   testPath: string,
+  config: Config,
   onMessage: (msg: TestMsg) => void
 ): Promise<TestResult> {
+  const env: { [k: string]: string } = {};
+  if (config.coverage) {
+    process.env["NODE_V8_COVERAGE"] ??= path.join(config.tmpDir, "v8cov");
+    env["NODE_V8_COVERAGE"] = await getCovDir(config.tmpDir, testPath);
+  }
   return new Promise((resolve) => {
     const worker = new Worker(testPath, {
       execArgv: ["--enable-source-maps"],
-      // env: { NODE_V8_COVERAGE: "./build/cov" },
+      env,
       stdout: true,
       stderr: true,
     });
@@ -29,6 +38,7 @@ export async function runTest(
       resolve({
         passed: code === 0,
         logs,
+        covDir: env["NODE_V8_COVERAGE"],
       });
     });
   });
