@@ -2,7 +2,7 @@ dependencies:
   '@istanbuljs/schema': 0.1.3
   '@types/lodash': 4.14.168
   '@types/sinon': 9.0.11
-  c8: 7.7.0
+  c8: github.com/tgecho/c8/711b0b7bf9c1de7c9754e3b545765eaefcde0559
   fake-indexeddb: 3.1.2
   lodash: 4.17.21
   nyc: 15.1.0
@@ -652,27 +652,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-vIyhWmIkULaq04Gt93txdh+j02yX/JzlyhLYbV3YQCn/zvES3JnY7TifHHvvr1w5hTDluNKMkV05cs4vy8Q7sw==
-  /c8/7.7.0:
-    dependencies:
-      '@bcoe/v8-coverage': 0.2.3
-      '@istanbuljs/schema': 0.1.3
-      find-up: 5.0.0
-      foreground-child: 2.0.0
-      furi: 2.0.0
-      istanbul-lib-coverage: 3.0.0
-      istanbul-lib-report: 3.0.0
-      istanbul-reports: 3.0.2
-      rimraf: 3.0.2
-      test-exclude: 6.0.0
-      v8-to-istanbul: 7.1.1
-      yargs: 16.2.0
-      yargs-parser: 20.2.7
-    dev: false
-    engines:
-      node: '>=10.12.0'
-    hasBin: true
-    resolution:
-      integrity: sha512-9OoBQBa5FPs7NNcjaH52SfQpLCXsDRwJKPOeQ9K1MyYoMlnfazMx3XHp+inFPxMA5BV6VMWw1uFrV9sao1oBqA==
   /caching-transform/4.0.0:
     dependencies:
       hasha: 5.2.2
@@ -2780,6 +2759,29 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+  github.com/tgecho/c8/711b0b7bf9c1de7c9754e3b545765eaefcde0559:
+    dependencies:
+      '@bcoe/v8-coverage': 0.2.3
+      '@istanbuljs/schema': 0.1.3
+      find-up: 5.0.0
+      foreground-child: 2.0.0
+      furi: 2.0.0
+      istanbul-lib-coverage: 3.0.0
+      istanbul-lib-report: 3.0.0
+      istanbul-reports: 3.0.2
+      rimraf: 3.0.2
+      test-exclude: 6.0.0
+      v8-to-istanbul: 7.1.1
+      yargs: 16.2.0
+      yargs-parser: 20.2.7
+    dev: false
+    engines:
+      node: '>=10.12.0'
+    hasBin: true
+    name: c8
+    resolution:
+      tarball: https://codeload.github.com/tgecho/c8/tar.gz/711b0b7bf9c1de7c9754e3b545765eaefcde0559
+    version: 7.7.0
 specifiers:
   '@istanbuljs/schema': ^0.1.3
   '@types/jsdom': ^16.2.9
@@ -2789,7 +2791,7 @@ specifiers:
   '@types/sinon': ^9.0.11
   '@typescript-eslint/eslint-plugin': ^4.19.0
   '@typescript-eslint/parser': ^4.19.0
-  c8: ^7.7.0
+  c8: github:tgecho/c8#update-types
   chalk: ^4.1.0
   chokidar: ^3.5.1
   esbuild: ^0.10.2

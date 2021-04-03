@@ -1,17 +1,22 @@
 import path from "path";
 import fs from "fs/promises";
-import { parentPort } from "worker_threads";
+import { parentPort, workerData } from "worker_threads";
 import { Report } from "c8";
 import defaultExclude from "@istanbuljs/schema/default-exclude";
 import debounce from "lodash/debounce";
-import { CoverageTask } from "./types";
+import { Config, CoverageTask } from "./types";
 import NYC from "nyc";
 
 const tests: { [testPath: string]: string } = {};
 
 parentPort?.on("message", collectTestCoverage);
+const config = workerData as Config;
+const coverageTempDir = path.join(config.tmpDir, "coverage");
 
-export async function collectTestCoverage({ covDir, testPath }: CoverageTask) {
+export async function collectTestCoverage({
+  covDir,
+  testPath,
+}: CoverageTask): Promise<void> {
   tests[testPath] = covDir;
   // This yields for a moment just so we can keep checking to see if this has
   // been superseded by a newer update, but still clean up after.
@@ -33,10 +38,10 @@ export async function collectTestCoverage({ covDir, testPath }: CoverageTask) {
     await report.run();
   }
   if (await stillCurrent()) {
-    await fs.mkdir(`node_modules/.verdant_tmp/coverage`, { recursive: true });
+    await fs.mkdir(coverageTempDir, { recursive: true });
     await fs.rename(
       path.join(covDir, "coverage-final.json"),
-      `node_modules/.verdant_tmp/coverage/${path.basename(testPath)}.json`
+      path.join(coverageTempDir, `${path.basename(testPath)}.json`)
     );
   }
   fs.rmdir(covDir, { recursive: true }).catch(console.warn);
@@ -49,13 +54,10 @@ const consolidateCoverage = debounce(async () => {
   console.log("\nCollecting coverage...");
   // Note that our initial c8 collection above takes care of source mapping
   const nyc = new NYC({
-    tempDir: "node_modules/.verdant_tmp/coverage/",
+    tempDir: coverageTempDir,
     reporter: ["text"],
     exclude: defaultExclude,
-    // include: "src/**/*",
-    // cwd: "/Users/erik/code/sync",
-    // exclude: ["sync/vendor/*"],
-    // excludeAfterRemap: true,
+    reportDir: config.coverageReportDir,
   });
   await nyc.report();
 }, 100);

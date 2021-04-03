@@ -21,7 +21,7 @@ export function runner(config: Config, callback: Reporter): Runner {
 
   const isTest = makeMultiMatcher(config.tests);
 
-  const coverage = createCoverageWorker("coverage");
+  const coverage = createCoverageWorker(config);
 
   const queueRun = debounce(
     () => {

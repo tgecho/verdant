@@ -1,7 +1,6 @@
 import { Worker } from "worker_threads";
 import { TestMsg, Log, TestResult, Config } from "./types";
-import { getCovDir, collectCoverage } from "./coverage";
-import fs from "fs/promises";
+import { getCovDir } from "./coverage";
 import path from "path";
 
 export async function runTest(

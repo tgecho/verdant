@@ -1,9 +1,12 @@
 import path from "path";
 import fs from "fs/promises";
 import { Worker } from "worker_threads";
-import { CoverageTask } from "./types";
+import { Config, CoverageTask } from "./types";
 
-export async function getCovDir(tmpDir: string, testPath: string) {
+export async function getCovDir(
+  tmpDir: string,
+  testPath: string
+): Promise<string> {
   const covDir = path.join(
     tmpDir,
     "v8cov",
@@ -13,8 +16,15 @@ export async function getCovDir(tmpDir: string, testPath: string) {
   return covDir;
 }
 
-export function createCoverageWorker(reportPath: string) {
-  const worker = new Worker(require.resolve("./coverageWorker"));
+export type CoverageWorker = {
+  update: (msg: CoverageTask) => void;
+  close: () => void;
+};
+
+export function createCoverageWorker(config: Config): CoverageWorker {
+  const worker = new Worker(require.resolve("./coverageWorker"), {
+    workerData: config,
+  });
   worker.on("error", console.error);
   worker.on("exit", console.error);
   return {
