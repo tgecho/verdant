@@ -15,6 +15,7 @@ const config: Config = {
   paths: ["src", "tests"],
   tests: ["*.test.ts"],
   ignored: [],
+  reporters: ["text", "html"],
   watch,
   coverage: true,
   tmpDir: "./node_modules/.verdant_tmp",

@@ -55,7 +55,7 @@ const consolidateCoverage = debounce(async () => {
   // Note that our initial c8 collection above takes care of source mapping
   const nyc = new NYC({
     tempDir: coverageTempDir,
-    reporter: ["text"],
+    reporter: config.reporters,
     exclude: defaultExclude,
     reportDir: config.coverageReportDir,
   });

@@ -10,6 +10,7 @@ export type Config = {
   tmpDir: string;
   coverageReportDir: string;
   bundlePath: string;
+  reporters: string[];
 };
 
 export type TestMsg =
