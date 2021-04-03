@@ -10,8 +10,10 @@ export const bailReporter: Reporter = {
   skipped(): void {
     // don't care
   },
-  failed(_path: string[], error: ReportedError): void {
-    console.error(error);
+  failed(path: string[], error: ReportedError): void {
+    console.error(`Failed: ${path.join(" | ")}`);
+    console.error(error.message);
+    if (error.stack) console.error(error.stack);
     process.exit(1);
   },
 };

@@ -43,7 +43,11 @@ export function test(
   // TODO: figure out how to fail the whole test
   const clear = clearTimeout; // make sure we have an unmocked clear fn
   const timeout = setTimeout(() => {
-    console.error("Timeout:", path);
+    const error = new Error("Test Timeout");
+    tests.report.failed?.(path, {
+      message: "Test Timeout",
+      stack: error.stack,
+    });
     cleanupHooks();
   }, 2 * 1000);
   hook.cleanup(() => clear(timeout));
