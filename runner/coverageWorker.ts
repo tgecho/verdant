@@ -44,7 +44,7 @@ export async function collectTestCoverage({
       path.join(coverageTempDir, `${path.basename(testPath)}.json`)
     );
   }
-  fs.rmdir(covDir, { recursive: true }).catch(console.warn);
+  fs.rm(covDir, { recursive: true }).catch(console.warn);
   if (await stillCurrent()) {
     consolidateCoverage();
   }
