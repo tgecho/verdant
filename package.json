@@ -1,5 +1,5 @@
 {
-  "name": "verdant",
+  "name": "@tgecho/verdant",
   "version": "0.1.0",
   "description": "A fast, opinionated test runner for Typescript/Javascript and co.",
   "main": "./dist/framework/index.js",
