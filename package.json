@@ -13,6 +13,11 @@
     "./bailReporter": "./dist/reporters/bail.js",
     "./runner": "./dist/runner.js"
   },
+  "files": [
+    "dist/*",
+    "LICENSE",
+    "README.md"
+  ],
   "bin": {
     "verdant": "./dist/runner/main.js"
   },
