@@ -1,7 +1,7 @@
 import { build, BuildIncremental, Plugin } from "esbuild";
 import { Config } from "./types";
 
-const parentPortReporter = "verdant/parentPortReporter";
+const parentPortReporter = "@tgecho/verdant/parentPortReporter";
 
 export const makeAllPackagesExternalPlugin: Plugin = {
   name: "make-all-packages-external",

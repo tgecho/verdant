@@ -6,7 +6,7 @@ import { makeAllPackagesExternalPlugin } from "./testBuilder";
 import { Config } from "./types";
 import { watch } from "./watch";
 
-const bailReporter = "verdant/bailReporter";
+const bailReporter = "@tgecho/verdant/bailReporter";
 
 export async function bundleAllTests(config: Config): Promise<BuildResult> {
   const sources: string[] = [];
