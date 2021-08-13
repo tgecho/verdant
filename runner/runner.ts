@@ -21,7 +21,7 @@ export function runner(config: Config, callback: Reporter): Runner {
 
   const isTest = makeMultiMatcher(config.tests);
 
-  const coverage = createCoverageWorker(config);
+  const coverage = config.coverage ? createCoverageWorker(config) : null;
 
   const queueRun = debounce(
     () => {
@@ -50,7 +50,7 @@ export function runner(config: Config, callback: Reporter): Runner {
                 }
               }).then((result) => {
                 if (result.covDir) {
-                  coverage.update({ testPath, covDir: result.covDir });
+                  coverage?.update(testPath, result.covDir);
                 }
                 return { testPath, ...result };
               });
@@ -77,6 +77,9 @@ export function runner(config: Config, callback: Reporter): Runner {
       const allPassed = Promise.all(runningTests.values()).then(
         async (results) => {
           callback.done?.();
+          if (config.coverage) {
+            await coverage?.print();
+          }
 
           for (const result of results) {
             if (result && result.passed === false) {
@@ -118,7 +121,7 @@ export function runner(config: Config, callback: Reporter): Runner {
 
   return {
     stop() {
-      coverage.close();
+      coverage?.close();
       return watcher.then((w) => w.close());
     },
   };

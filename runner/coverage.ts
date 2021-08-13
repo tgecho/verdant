@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { Worker } from "worker_threads";
-import { Config, CoverageTask } from "./types";
+import { Config } from "./types";
 
 export async function getCovDir(
   tmpDir: string,
@@ -17,7 +17,8 @@ export async function getCovDir(
 }
 
 export type CoverageWorker = {
-  update: (msg: CoverageTask) => void;
+  update: (testPath: string, covDir: string) => void;
+  print: () => Promise<void>;
   close: () => void;
 };
 
@@ -28,8 +29,19 @@ export function createCoverageWorker(config: Config): CoverageWorker {
   worker.on("error", console.error);
   worker.on("exit", console.error);
   return {
-    update(msg: CoverageTask) {
-      worker.postMessage(msg);
+    update(testPath: string, covDir: string) {
+      worker.postMessage({ type: "CoverageUpdate", testPath, covDir });
+    },
+    print() {
+      worker.postMessage({ type: "CoveragePrint" });
+      return new Promise((resolve, reject) => {
+        worker.on("message", (msg) => {
+          if (msg.type === "PrintComplete") {
+            resolve();
+          }
+        });
+        setTimeout(reject, 30000);
+      });
     },
     close() {
       worker.terminate();

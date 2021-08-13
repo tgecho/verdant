@@ -9,6 +9,7 @@ const watch = args.includes("--watch") || args.includes("-w");
 const anybar = watch || args.includes("--anybar");
 const rawOutput = args.includes("--raw");
 const bundle = args.includes("--bundle");
+const coverage = watch || args.includes("--coverage");
 
 const config: Config = {
   cwd: process.cwd(),
@@ -17,7 +18,7 @@ const config: Config = {
   ignored: [],
   reporters: ["text", "html"],
   watch,
-  coverage: true,
+  coverage,
   tmpDir: "./node_modules/.verdant_tmp",
   coverageReportDir: "./reports/coverage",
   bundlePath: "./build/test.cjs",

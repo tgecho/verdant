@@ -6,7 +6,7 @@ export type Config = {
   tests: string[];
   ignored: string[];
   watch: boolean;
-  coverage: true;
+  coverage: boolean;
   tmpDir: string;
   coverageReportDir: string;
   bundlePath: string;
@@ -29,7 +29,14 @@ export type TestResult = {
   covDir?: string;
 };
 
-export type CoverageTask = {
+export type CoverageMsg = CoverageUpdate | CoveragePrint;
+
+export type CoverageUpdate = {
+  type: "CoverageUpdate";
   testPath: string;
   covDir: string;
+};
+
+export type CoveragePrint = {
+  type: "CoveragePrint";
 };
