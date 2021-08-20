@@ -1,6 +1,6 @@
 {
-  "name": "@tgecho/verdant",
-  "version": "0.2.0",
+  "name": "verdant",
+  "version": "0.3.0",
   "description": "A fast, opinionated test runner for Typescript/Javascript and co.",
   "main": "./dist/framework/index.js",
   "browser": "./dist/framework/index.js",

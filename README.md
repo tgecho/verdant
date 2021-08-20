@@ -9,7 +9,7 @@ Open source, but not particularly looking to make an open project. This is custo
 ## Install
 
 ```sh
-$ pnpm install @tgecho/verdant
+$ pnpm install verdant
 ```
 
 ## Usage
